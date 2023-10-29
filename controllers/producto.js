@@ -17,7 +17,7 @@ module.exports.agregar = app.post('/', (req, res) => {
                 precio,
                 stock,
                 volumen,
-                estado,
+                estado)
                 VALUES (?,?,?,?,?,?,?,?)`;
     const values = [ Nombre, Tipo, Marca, Descripcion, Precio, Stock, Volumen, 1 ];
 
