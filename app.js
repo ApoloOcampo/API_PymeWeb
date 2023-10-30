@@ -42,4 +42,6 @@ function controladores() {
     app.use('/api/producto/', producto.actualizar);
     app.use('/api/producto/', producto.eliminar);
     app.use('/api/producto/', producto.eliminar_estado);
+    app.use('/api/producto/', producto.con_alcohol);
+    app.use('/api/producto/', producto.sin_alcohol);
 }

@@ -8,7 +8,7 @@ const app = express();
 
 //metodo post Producto
 module.exports.agregar = app.post('/', (req, res) => {
-    const { Nombre, Tipo, Marca, Descripcion, Precio, Stock, Volumen, Estado } = req.body;
+    const { Nombre, Tipo, Marca, Descripcion, Precio, Stock, Volumen, Imagen,Estado } = req.body;
     const sql = `INSERT INTO producto ( 
                 nombre, 
                 tipo,
@@ -17,9 +17,10 @@ module.exports.agregar = app.post('/', (req, res) => {
                 precio,
                 stock,
                 volumen,
+                imagen,
                 estado)
-                VALUES (?,?,?,?,?,?,?,?)`;
-    const values = [ Nombre, Tipo, Marca, Descripcion, Precio, Stock, Volumen, 1 ];
+                VALUES (?,?,?,?,?,?,?,?,?)`;
+    const values = [ Nombre, Tipo, Marca, Descripcion, Precio, Stock, Volumen, Imagen, 1 ];
 
     connection.query(sql, values, (error, results) => {
         if (error) throw error;
@@ -38,6 +39,7 @@ module.exports.buscar_todo = app.get('/', (request, response) => {
                     precio,
                     stock,
                     volumen,
+                    imagen,
                     estado
                 FROM producto
                 WHERE estado = 1`;
@@ -61,7 +63,8 @@ module.exports.actualizar = app.patch('/', (request, response) => {
         Descripcion,
         Precio,
         Stock,
-        Volumen
+        Volumen,
+        Imagen
 
     } = request.body;
     
@@ -73,7 +76,8 @@ module.exports.actualizar = app.patch('/', (request, response) => {
             descripcion = ?,
             precio = ?,
             stock = ?,
-            volumen = ?
+            volumen = ?,
+            imagen = ?
         WHERE id_producto = ?
     `;
 
@@ -85,6 +89,7 @@ module.exports.actualizar = app.patch('/', (request, response) => {
         Precio,
         Stock,
         Volumen,
+        Imagen,
         Id_producto
     ];
     
@@ -125,3 +130,50 @@ module.exports.eliminar_estado = app.put('/', (request, response) => {
     });
 });
 
+//metodo get Productos sin alcohol
+module.exports.con_alcohol = app.get('/con_alcohol', (request, response) => {  
+    const sql = `SELECT id_producto, 
+                    nombre, 
+                    tipo,
+                    marca,
+                    descripcion,
+                    precio,
+                    stock,
+                    volumen,
+                    imagen,
+                    estado
+                FROM producto
+                WHERE tipo = 'Con alcohol'`;
+    connection.query(sql, (error, results) => {
+        if (error) throw error;
+        if (results.length > 0) {
+            response.status(200).send(results);
+        } else {
+            response.status(204).send('Sin resultado');
+        }
+    })               
+});
+
+//metodo get Productos con alcohol
+module.exports.sin_alcohol = app.get('/sin_alcohol', (request, response) => {  
+    const sql = `SELECT id_producto, 
+                    nombre, 
+                    tipo,
+                    marca,
+                    descripcion,
+                    precio,
+                    stock,
+                    volumen,
+                    imagen,
+                    estado
+                FROM producto
+                WHERE tipo = 'Sin alcohol'`;
+    connection.query(sql, (error, results) => {
+        if (error) throw error;
+        if (results.length > 0) {
+            response.status(200).send(results);
+        } else {
+            response.status(204).send('Sin resultado');
+        }
+    })               
+});
